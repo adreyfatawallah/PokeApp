@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="bottom_nav_menu">
+        <item>@string/home</item>
+        <item>@string/profile</item>
+    </array>
+</resources>

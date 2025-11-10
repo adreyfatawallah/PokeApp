@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PokeApp</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="search_here">Search Here</string>
+    <string name="username_and_password_cannot_be_empty">Username and password cannot be empty</string>
+    <string name="error_unknown">Error unknown</string>
+    <string name="invalid_username_or_password">Invalid username and password</string>
+</resources>
