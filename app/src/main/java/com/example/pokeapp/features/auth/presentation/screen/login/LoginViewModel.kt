@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokeapp.R
-import com.example.pokeapp.features.auth.domain.entities.User
-import com.example.pokeapp.features.auth.domain.usecases.AuthLogin
-import com.example.pokeapp.features.auth.domain.usecases.LoginParam
+import com.example.pokeapp.features.auth.domain.usecases.PostLogin
+import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authLogin: AuthLogin,
+    private val postLogin: PostLogin,
     @param:ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginState())
@@ -37,9 +36,7 @@ class LoginViewModel @Inject constructor(
 
     fun clearErrorMessage() {
         _uiState.update {
-            it.copy(
-                error = null
-            )
+            it.copy(error = "")
         }
     }
 
@@ -54,21 +51,20 @@ class LoginViewModel @Inject constructor(
             return
         }
 
-        val param = LoginParam(
+        val param = AuthParam(
             username = username,
             password = password
         )
 
         viewModelScope.launch {
             _uiState.update {
-                it.copy(isLoading = true, error = null)
+                it.copy(isLoading = true, error = "")
             }
 
             try {
-                val userLogin = authLogin(param)
+                val userLogin = postLogin(param)
 
                 if (userLogin != null) {
-                    authLogin.saveLoginInfo(userLogin.username)
                     _uiState.update {
                         it.copy(isValid = true)
                     }

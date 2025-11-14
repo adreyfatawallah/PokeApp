@@ -1,15 +1,16 @@
 package com.example.pokeapp.features.auth
 
-import com.example.pokeapp.base.usecase.UseCase
+import com.example.pokeapp.base.usecase.SuspendUseCase
 import com.example.pokeapp.features.auth.data.datasources.AuthLocalDataSource
 import com.example.pokeapp.features.auth.data.datasources.AuthLocalDataSourceImpl
-import com.example.pokeapp.features.auth.data.repositories.UserRepositoryImpl
+import com.example.pokeapp.features.auth.data.datasources.AuthRemoteDataSource
+import com.example.pokeapp.features.auth.data.datasources.AuthRemoteDataSourceImpl
+import com.example.pokeapp.features.auth.data.repositories.AuthRepositoryImpl
 import com.example.pokeapp.features.auth.domain.entities.User
-import com.example.pokeapp.features.auth.domain.repositories.UserRepository
-import com.example.pokeapp.features.auth.domain.usecases.AuthLogin
-import com.example.pokeapp.features.auth.domain.usecases.AuthRegister
-import com.example.pokeapp.features.auth.domain.usecases.LoginParam
-import com.example.pokeapp.features.auth.domain.usecases.RegisterParam
+import com.example.pokeapp.features.auth.domain.repositories.AuthRepository
+import com.example.pokeapp.features.auth.domain.usecases.PostLogin
+import com.example.pokeapp.features.auth.domain.usecases.PostRegister
+import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,25 +23,31 @@ abstract class AuthModule {
 
     @Binds
     @Singleton
-    abstract fun provideAuthLocalDataStore(
+    abstract fun bindAuthRemoteDataSource(
+        impl: AuthRemoteDataSourceImpl
+    ) : AuthRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthLocalDataSource(
         impl: AuthLocalDataSourceImpl
     ) : AuthLocalDataSource
 
     @Binds
     @Singleton
-    abstract fun provideUserRepository(
-        impl: UserRepositoryImpl
-    ) : UserRepository
+    abstract fun bindAuthRepository(
+        impl: AuthRepositoryImpl
+    ) : AuthRepository
 
     @Binds
     @Singleton
-    abstract fun provideAuthLoginUseCase(
-        impl: AuthLogin
-    ) : UseCase<User?, LoginParam>
+    abstract fun bindPostLogin(
+        impl: PostLogin
+    ) : SuspendUseCase<User?, AuthParam>
 
     @Binds
     @Singleton
-    abstract fun provideregisterUseCase(
-        impl: AuthRegister
-    ) : UseCase<Unit, RegisterParam>
+    abstract fun bindPostRegister(
+        impl: PostRegister
+    ) : SuspendUseCase<Unit, AuthParam>
 }

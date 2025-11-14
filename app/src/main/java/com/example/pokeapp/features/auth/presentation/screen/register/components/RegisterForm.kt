@@ -1,4 +1,4 @@
-package com.example.pokeapp.features.auth.presentation.screen.login.components
+package com.example.pokeapp.features.auth.presentation.screen.register.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,34 +7,37 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pokeapp.R
+import com.example.pokeapp.components.PasswordOutlinedTextField
 import com.example.pokeapp.ui.theme.PokeAppTheme
 
 @Composable
-fun LoginLayout(
+fun RegisterForm(
     modifier: Modifier = Modifier,
     username: String,
     password: String,
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    login: () -> Unit,
-    navigateToRegister: () -> Unit
+    register: () -> Unit
 ) {
+    var retypePassword by remember { mutableStateOf("") }
+
     Column(
-        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(space = 16.dp),
         modifier = modifier.width(IntrinsicSize.Max)
     ) {
         OutlinedTextField(
@@ -49,32 +52,25 @@ fun LoginLayout(
             onValueChange = onUsernameChange,
             label = { Text(stringResource(id = R.string.username)) },
         )
-        OutlinedTextField(
-            singleLine = true,
-            value = password,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = stringResource(id = R.string.password)
-                )
+        PasswordOutlinedTextField(
+            label = stringResource(id = R.string.password),
+            password = password,
+            onPasswordChange = onPasswordChange
+        )
+        PasswordOutlinedTextField(
+            label = stringResource(id = R.string.retype_password),
+            password = retypePassword,
+            onPasswordChange = {
+                retypePassword = it
             },
-            onValueChange = onPasswordChange,
-            label = { Text(stringResource(id = R.string.password)) },
-            visualTransformation = PasswordVisualTransformation()
+            isError = retypePassword.isNotBlank() && retypePassword != password
         )
         Button(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            onClick = {
-                login()
-            }
-        ) {
-            Text(text = stringResource(id = R.string.login))
-        }
-        TextButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = navigateToRegister
+            onClick = register,
+            enabled = username.isNotBlank() && password.isNotBlank() && retypePassword == password
         ) {
             Text(text = stringResource(id = R.string.register))
         }
@@ -83,15 +79,14 @@ fun LoginLayout(
 
 @Preview(showBackground = true)
 @Composable
-private fun LoginLayoutPreview() {
+private fun RegisterFormPreview() {
     PokeAppTheme {
-        LoginLayout(
+        RegisterForm(
             username = "",
-            onUsernameChange = { },
             password = "",
+            onUsernameChange = { },
             onPasswordChange = { },
-            login = { },
-            navigateToRegister = { }
+            register = { }
         )
     }
 }

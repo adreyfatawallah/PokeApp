@@ -1,9 +1,9 @@
 package com.example.pokeapp.base.usecase
 
-interface UseCase<out R, in P> {
+interface SuspendUseCase<out R, in P> {
     suspend operator fun invoke(param: P): R
 }
 
-interface UseCase2<out R, in P> {
+interface UseCase<out R, in P> {
     operator fun invoke(param: P): R
 }

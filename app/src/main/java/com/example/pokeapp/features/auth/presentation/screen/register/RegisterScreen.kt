@@ -1,6 +1,5 @@
 package com.example.pokeapp.features.auth.presentation.screen.register
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pokeapp.R
-import com.example.pokeapp.features.auth.presentation.screen.register.components.RegisterLayout
+import com.example.pokeapp.features.auth.presentation.screen.register.components.RegisterForm
 import com.example.pokeapp.ui.theme.PokeAppTheme
 
 @Composable
@@ -36,6 +35,12 @@ fun RegisterScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(uiState.isSucess) {
+        if (uiState.isSucess) {
+            navigateBack()
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) {
@@ -44,15 +49,11 @@ fun RegisterScreen(
             verticalArrangement = Arrangement.spacedBy(space = 16.dp, Alignment.CenterVertically),
             modifier = modifier.fillMaxSize()
         ) {
-            uiState.error?.let {
-                LaunchedEffect(it) {
-                    snackbarHostState.showSnackbar(it)
+            LaunchedEffect(uiState.error) {
+                if (uiState.error.isNotBlank()) {
+                    snackbarHostState.showSnackbar(uiState.error)
                     viewModel.clearErrorMessage()
                 }
-            }
-
-            if (uiState.isSucess) {
-                navigateBack()
             }
 
             if (uiState.isLoading) {
@@ -63,7 +64,7 @@ fun RegisterScreen(
                     fontWeight = FontWeight.W500,
                     fontSize = 25.sp
                 )
-                RegisterLayout(
+                RegisterForm(
                     modifier = Modifier.padding(top = 8.dp),
                     username = uiState.username,
                     password = uiState.password,

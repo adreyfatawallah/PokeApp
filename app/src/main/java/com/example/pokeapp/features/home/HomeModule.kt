@@ -1,6 +1,6 @@
 package com.example.pokeapp.features.home
 
-import com.example.pokeapp.base.usecase.UseCase2
+import com.example.pokeapp.base.usecase.UseCase
 import com.example.pokeapp.features.home.data.datasource.HomeLocalDataSource
 import com.example.pokeapp.features.home.data.datasource.HomeLocalDataSourceImpl
 import com.example.pokeapp.features.home.data.repositories.HomeRepositoryImpl
@@ -33,5 +33,5 @@ abstract class HomeModule {
     @Singleton
     abstract fun provideIsLoggedInUseCase(
         impl: IsLoggedIn
-    ) : UseCase2<Flow<Boolean>, Any?>
+    ) : UseCase<Flow<Boolean>, Any?>
 }

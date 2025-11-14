@@ -17,15 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokeapp.R
-import com.example.pokeapp.features.auth.presentation.screen.login.components.LoginLayout
-import com.example.pokeapp.ui.theme.PokeAppTheme
+import com.example.pokeapp.features.auth.presentation.screen.login.components.LoginForm
 
 @Composable
 fun LoginScreen(
@@ -37,6 +34,12 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(uiState.isValid) {
+        if (uiState.isValid) {
+            navigateToHome()
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
@@ -47,15 +50,11 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            uiState.error?.let {
-                LaunchedEffect(it) {
-                    snackbarHostState.showSnackbar(message = it)
+            LaunchedEffect(uiState.error) {
+                if (uiState.error.isNotBlank()) {
+                    snackbarHostState.showSnackbar(message = uiState.error)
                     viewModel.clearErrorMessage()
                 }
-            }
-
-            if (uiState.isValid) {
-                navigateToHome()
             }
 
             if (uiState.isLoading) {
@@ -66,7 +65,7 @@ fun LoginScreen(
                     fontWeight = FontWeight.W500,
                     fontSize = 45.sp
                 )
-                LoginLayout(
+                LoginForm(
                     modifier = Modifier.padding(top = 8.dp),
                     username = uiState.username,
                     onUsernameChange = {
@@ -83,16 +82,5 @@ fun LoginScreen(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun LoginScreenPreview() {
-    PokeAppTheme {
-        LoginScreen(
-            navigateToRegister = { },
-            navigateToHome = { }
-        )
     }
 }

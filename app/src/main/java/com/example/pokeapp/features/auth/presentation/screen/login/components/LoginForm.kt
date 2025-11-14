@@ -1,4 +1,4 @@
-package com.example.pokeapp.features.auth.presentation.screen.register.components
+package com.example.pokeapp.features.auth.presentation.screen.login.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,32 +7,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pokeapp.R
+import com.example.pokeapp.components.PasswordOutlinedTextField
 import com.example.pokeapp.ui.theme.PokeAppTheme
 
 @Composable
-fun RegisterLayout(
+fun LoginForm(
     modifier: Modifier = Modifier,
     username: String,
     password: String,
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    register: () -> Unit
+    login: () -> Unit,
+    navigateToRegister: () -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(space = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         modifier = modifier.width(IntrinsicSize.Max)
     ) {
         OutlinedTextField(
@@ -47,24 +48,22 @@ fun RegisterLayout(
             onValueChange = onUsernameChange,
             label = { Text(stringResource(id = R.string.username)) },
         )
-        OutlinedTextField(
-            singleLine = true,
-            value = password,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = stringResource(id = R.string.password)
-                )
-            },
-            onValueChange = onPasswordChange,
-            label = { Text(stringResource(id = R.string.password)) },
-            visualTransformation = PasswordVisualTransformation()
+        PasswordOutlinedTextField(
+            label = stringResource(R.string.password),
+            password = password,
+            onPasswordChange = onPasswordChange
         )
         Button(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            onClick = register
+            onClick = login
+        ) {
+            Text(text = stringResource(id = R.string.login))
+        }
+        TextButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = navigateToRegister
         ) {
             Text(text = stringResource(id = R.string.register))
         }
@@ -73,14 +72,15 @@ fun RegisterLayout(
 
 @Preview(showBackground = true)
 @Composable
-private fun RegisterLayoutPreview() {
+private fun LoginFormPreview() {
     PokeAppTheme {
-        RegisterLayout(
+        LoginForm(
             username = "",
-            password = "",
             onUsernameChange = { },
+            password = "",
             onPasswordChange = { },
-            register = { }
+            login = { },
+            navigateToRegister = { }
         )
     }
 }

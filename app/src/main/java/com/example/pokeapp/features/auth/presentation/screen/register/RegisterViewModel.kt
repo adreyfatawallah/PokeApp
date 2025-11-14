@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokeapp.R
-import com.example.pokeapp.features.auth.domain.entities.User
-import com.example.pokeapp.features.auth.domain.repositories.UserRepository
-import com.example.pokeapp.features.auth.domain.usecases.AuthRegister
-import com.example.pokeapp.features.auth.domain.usecases.RegisterParam
+import com.example.pokeapp.features.auth.domain.usecases.PostRegister
+import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRegister: AuthRegister,
+    private val postRegister: PostRegister,
     @param:ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RegisterState())
@@ -38,7 +36,7 @@ class RegisterViewModel @Inject constructor(
 
     fun clearErrorMessage() {
         _uiState.update {
-            it.copy(error = null)
+            it.copy(error = "")
         }
     }
 
@@ -53,16 +51,16 @@ class RegisterViewModel @Inject constructor(
             return
         }
 
-        val param = RegisterParam(
+        val param = AuthParam(
             username = username,
             password = password
         )
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(isLoading = true, error = "") }
 
             try {
-                authRegister(param)
+                postRegister(param)
 
                 _uiState.update {
                     it.copy(isSucess = true)
