@@ -19,6 +19,7 @@ fun HomeScreen(
     val uiState = homeViewModel.uiState.collectAsStateWithLifecycle()
 
     if (uiState.value == null) {
+        // actual splash screen
         ProgressIndicator()
     } else {
         val startDestination = if (uiState.value == true) HOME_GRAPH_ROUTE else AUTH_GRAPH_ROUTE

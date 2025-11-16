@@ -1,5 +1,9 @@
 package com.example.pokeapp.features.pokemon.presentation.list
 
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokeapp.base.api.onFailure
@@ -27,6 +31,14 @@ class PokemonListViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000L),
         PokemonListState.Loading
     )
+
+    var key by mutableStateOf(value = "")
+        private set
+
+    fun onKeyChanged(key: String) {
+        this.key = key
+        Log.e("adrey", "onKeyChanged: ${this.key}")
+    }
 
     private fun fetchPokemonList() {
         _uiState.value = PokemonListState.Loading
