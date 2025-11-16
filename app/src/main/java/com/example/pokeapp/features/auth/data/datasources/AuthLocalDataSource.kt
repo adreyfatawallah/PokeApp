@@ -15,7 +15,6 @@ interface AuthLocalDataSource {
     suspend fun register(param: AuthParam)
 }
 
-@Singleton
 class AuthLocalDataSourceImpl @Inject constructor(
     private val userDao: UserDao,
     private val sharedPref: SharedPrefModule

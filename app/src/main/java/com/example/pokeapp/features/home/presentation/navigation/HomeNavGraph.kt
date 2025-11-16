@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.pokeapp.features.poke.presentation.list.PokeListScreen
+import com.example.pokeapp.features.pokemon.presentation.list.PokemonListScreen
 import com.example.pokeapp.features.profile.presentation.ProfileScreen
 
 @Composable
@@ -19,7 +19,7 @@ fun HomeNavGraph(
         startDestination = HomeRoute.Poke.route
     ) {
         composable(route = HomeRoute.Poke.route) {
-            PokeListScreen(
+            PokemonListScreen(
                 modifier = modifier
             )
         }

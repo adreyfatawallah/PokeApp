@@ -65,10 +65,22 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation(libs.google.dagger.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.google.dagger.hilt.compiler)
+    implementation(libs.com.google.dagger.hilt.android)
     ksp(libs.androidx.hilt.compiler)
+
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.com.google.dagger.hilt.compiler)
+
+    implementation(libs.com.squareup.retrofit2)
+    implementation(libs.com.squareup.retrofit2.converter.moshi)
+    implementation(libs.com.squareup.okhttp3)
+    implementation(libs.com.squareup.okhttp3.logging.interceptor)
+
+    implementation(libs.com.squareup.moshi)
+    implementation(libs.com.squareup.moshi.kotlin)
+    ksp(libs.com.squareup.moshi.kotlin.codegen)
+
+    implementation(libs.org.jetbrains.kotlinx)
 
     testImplementation(libs.junit)
 

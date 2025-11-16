@@ -5,9 +5,7 @@ import com.example.pokeapp.features.auth.domain.entities.User
 import com.example.pokeapp.features.auth.domain.repositories.AuthRepository
 import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class PostLogin @Inject constructor(
     private val userRepository: AuthRepository
 ) : SuspendUseCase<User?, AuthParam> {

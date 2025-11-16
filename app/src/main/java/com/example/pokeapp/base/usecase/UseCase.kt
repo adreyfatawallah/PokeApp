@@ -7,3 +7,5 @@ interface SuspendUseCase<out R, in P> {
 interface UseCase<out R, in P> {
     operator fun invoke(param: P): R
 }
+
+class NoParam

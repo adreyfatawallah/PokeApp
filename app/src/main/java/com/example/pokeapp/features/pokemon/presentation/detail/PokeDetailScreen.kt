@@ -1,4 +1,4 @@
-package com.example.pokeapp.features.poke.presentation.detail
+package com.example.pokeapp.features.pokemon.presentation.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

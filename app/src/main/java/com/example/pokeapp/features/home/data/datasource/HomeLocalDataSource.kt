@@ -9,7 +9,6 @@ interface HomeLocalDataSource {
     fun isLoggedIn(): Flow<Boolean>
 }
 
-@Singleton
 class HomeLocalDataSourceImpl @Inject constructor(
     private val sharedPref: SharedPrefModule
 ) : HomeLocalDataSource {
