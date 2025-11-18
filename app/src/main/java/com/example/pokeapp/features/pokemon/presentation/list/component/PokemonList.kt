@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
@@ -26,6 +27,7 @@ fun PokemonList(
     key: String,
     onKeyChanged: (String) -> Unit,
     list: List<Pokemon>,
+    listState: LazyListState
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp),
@@ -45,7 +47,9 @@ fun PokemonList(
                 Text(text = stringResource(id = R.string.search_here))
             }
         )
-        LazyColumn {
+        LazyColumn(
+            state = listState
+        ) {
             items(list) {
                 Text(text = it.name, modifier = Modifier.padding(8.dp))
             }
@@ -57,6 +61,6 @@ fun PokemonList(
 @Composable
 private fun PokemonListPreview() {
     PokeAppTheme {
-        PokemonList(key = "", onKeyChanged = { }, list = emptyList())
+        PokemonList(key = "", onKeyChanged = { }, list = emptyList(), listState = LazyListState())
     }
 }

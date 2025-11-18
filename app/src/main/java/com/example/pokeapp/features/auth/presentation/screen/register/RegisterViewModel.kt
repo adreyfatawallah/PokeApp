@@ -1,13 +1,10 @@
 package com.example.pokeapp.features.auth.presentation.screen.register
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokeapp.R
 import com.example.pokeapp.features.auth.domain.usecases.PostRegister
-import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,8 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val postRegister: PostRegister,
-    @param:ApplicationContext private val context: Context
+    private val postRegister: PostRegister
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RegisterState())
     val uiState = _uiState.asStateFlow()
@@ -36,7 +32,7 @@ class RegisterViewModel @Inject constructor(
 
     fun clearErrorMessage() {
         _uiState.update {
-            it.copy(error = "")
+            it.copy(error = null)
         }
     }
 
@@ -44,30 +40,35 @@ class RegisterViewModel @Inject constructor(
         val username = _uiState.value.username
         val password = _uiState.value.password
 
-        if (username.isBlank() || password.isBlank()) {
+        if (username.isBlank()) {
             _uiState.update {
-                it.copy(error = context.getString(R.string.username_and_password_cannot_be_empty))
+                it.copy(error = RegisterState.Error(string = R.string.username_cannot_be_empty))
+            }
+            return
+        } else if (password.isBlank()) {
+            _uiState.update {
+                it.copy(error = RegisterState.Error(string = R.string.password_cannot_be_empty))
             }
             return
         }
 
-        val param = AuthParam(
+        val param = PostRegister.Param(
             username = username,
             password = password
         )
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = "") }
+            _uiState.update { it.copy(isLoading = true, error = null) }
 
             try {
                 postRegister(param)
 
                 _uiState.update {
-                    it.copy(isSucess = true)
+                    it.copy(isSuccess = true)
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(error = e.message ?: context.getString(R.string.error_unknown))
+                    it.copy(error = RegisterState.Error(message = e.message))
                 }
             } finally {
                 _uiState.update {

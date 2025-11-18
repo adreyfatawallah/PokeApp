@@ -1,13 +1,10 @@
 package com.example.pokeapp.features.auth.presentation.screen.login
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokeapp.R
 import com.example.pokeapp.features.auth.domain.usecases.PostLogin
-import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val postLogin: PostLogin,
-    @param:ApplicationContext private val context: Context
+    private val postLogin: PostLogin
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
@@ -34,9 +30,15 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun clearForm() {
+        _uiState.update {
+            it.copy(username = "", password = "", error = null)
+        }
+    }
+
     fun clearErrorMessage() {
         _uiState.update {
-            it.copy(error = "")
+            it.copy(error = null)
         }
     }
 
@@ -44,21 +46,26 @@ class LoginViewModel @Inject constructor(
         val username = _uiState.value.username
         val password = _uiState.value.password
 
-        if (username.isBlank() || password.isBlank()) {
+        if (username.isBlank()) {
             _uiState.update {
-                it.copy(error = context.getString(R.string.username_and_password_cannot_be_empty))
+                it.copy(error = LoginState.Error(R.string.username_cannot_be_empty))
+            }
+            return
+        } else if (password.isBlank()) {
+            _uiState.update {
+                it.copy(error = LoginState.Error(R.string.password_cannot_be_empty))
             }
             return
         }
 
-        val param = AuthParam(
+        val param = PostLogin.Param(
             username = username,
             password = password
         )
 
         viewModelScope.launch {
             _uiState.update {
-                it.copy(isLoading = true, error = "")
+                it.copy(isLoading = true, error = null)
             }
 
             try {
@@ -72,13 +79,13 @@ class LoginViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isValid = false,
-                            error = context.getString(R.string.invalid_username_or_password)
+                            error = LoginState.Error(string = R.string.invalid_username_or_password)
                         )
                     }
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(error = e.message ?: context.getString(R.string.error_unknown))
+                    it.copy(error = LoginState.Error(message = e.message))
                 }
             } finally {
                 _uiState.update {

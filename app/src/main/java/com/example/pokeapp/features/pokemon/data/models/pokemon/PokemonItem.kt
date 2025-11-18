@@ -4,11 +4,11 @@ import com.example.pokeapp.features.pokemon.domain.entities.list.Pokemon
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class PokemonResult(
+data class PokemonItem(
     val name: String,
     val url: String
 )
 
-fun PokemonResult.toDomain() : Pokemon {
+fun PokemonItem.toDomain() : Pokemon {
     return Pokemon(name = name, url = url)
 }

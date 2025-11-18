@@ -1,4 +1,4 @@
-package com.example.pokeapp.core.sharedpref
+package com.example.pokeapp.config.sharedpref
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
 @Singleton
-class SharedPrefModule @Inject constructor(
+class UserPreferences @Inject constructor(
     @param:ApplicationContext private val context: Context,
 ) {
     companion object Companion {

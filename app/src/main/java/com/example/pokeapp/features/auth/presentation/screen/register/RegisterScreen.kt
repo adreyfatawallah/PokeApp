@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,30 +33,38 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
     navigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState.isSucess) {
-        if (uiState.isSucess) {
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
             navigateBack()
+        }
+    }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            val message = if (error.string != null) {
+                context.getString(error.string)
+            } else {
+                error.message ?: context.getString(R.string.unknown_error)
+            }
+
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearErrorMessage()
         }
     }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) {
+    ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(space = 16.dp, Alignment.CenterVertically),
             modifier = modifier.fillMaxSize()
+                .padding(innerPadding)
         ) {
-            LaunchedEffect(uiState.error) {
-                if (uiState.error.isNotBlank()) {
-                    snackbarHostState.showSnackbar(uiState.error)
-                    viewModel.clearErrorMessage()
-                }
-            }
-
             if (uiState.isLoading) {
                 CircularProgressIndicator()
             } else {

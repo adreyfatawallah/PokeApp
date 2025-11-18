@@ -1,34 +1,32 @@
 package com.example.pokeapp.features.auth.data.datasources
 
-import com.example.pokeapp.core.database.user.UserDao
-import com.example.pokeapp.core.database.user.toUser
-import com.example.pokeapp.core.sharedpref.SharedPrefModule
+import com.example.pokeapp.config.database.user.UserDao
+import com.example.pokeapp.config.database.user.UserEntity
+import com.example.pokeapp.config.database.user.toUser
+import com.example.pokeapp.config.sharedpref.UserPreferences
 import com.example.pokeapp.features.auth.domain.entities.User
-import com.example.pokeapp.features.auth.domain.usecases.param.AuthParam
-import com.example.pokeapp.features.auth.domain.usecases.param.toUserEntity
 import javax.inject.Inject
-import javax.inject.Singleton
 
 interface AuthLocalDataSource {
-    suspend fun login(param: AuthParam): User?
+    suspend fun login(username: String, password: String): User?
 
-    suspend fun register(param: AuthParam)
+    suspend fun register(user: UserEntity)
 }
 
 class AuthLocalDataSourceImpl @Inject constructor(
     private val userDao: UserDao,
-    private val sharedPref: SharedPrefModule
+    private val userPreferences: UserPreferences
 ) : AuthLocalDataSource {
 
-    override suspend fun login(param: AuthParam): User? {
-        val user = userDao.getUserByUsernamePassword(param.username, param.password)
+    override suspend fun login(username: String, password: String): User? {
+        val user = userDao.getUserByUsernamePassword(username, password)
         user?.let {
-            sharedPref.saveLoginInfo(true, it.username)
+            userPreferences.saveLoginInfo(true, it.username)
         }
         return user?.toUser()
     }
 
-    override suspend fun register(param: AuthParam) {
-        userDao.insertUser(param.toUserEntity())
+    override suspend fun register(user: UserEntity) {
+        userDao.insertUser(user)
     }
 }

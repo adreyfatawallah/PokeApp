@@ -1,6 +1,6 @@
 package com.example.pokeapp.features.auth.data.datasources
 
-import com.example.pokeapp.core.api.ApiService
+import com.example.pokeapp.config.api.ApiService
 import javax.inject.Inject
 
 interface AuthRemoteDataSource {

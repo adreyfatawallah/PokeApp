@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,12 +32,26 @@ fun LoginScreen(
     navigateToRegister: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.isValid) {
         if (uiState.isValid) {
             navigateToHome()
+        }
+    }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            val message = if (error.string != null) {
+                context.getString(error.string)
+            } else {
+                error.message ?: context.getString(R.string.unknown_error)
+            }
+
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearErrorMessage()
         }
     }
 
@@ -50,13 +65,6 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            LaunchedEffect(uiState.error) {
-                if (uiState.error.isNotBlank()) {
-                    snackbarHostState.showSnackbar(message = uiState.error)
-                    viewModel.clearErrorMessage()
-                }
-            }
-
             if (uiState.isLoading) {
                 CircularProgressIndicator()
             } else {
@@ -78,7 +86,10 @@ fun LoginScreen(
                     login = {
                         viewModel.login()
                     },
-                    navigateToRegister = navigateToRegister
+                    navigateToRegister = {
+                        viewModel.clearForm()
+                        navigateToRegister()
+                    }
                 )
             }
         }

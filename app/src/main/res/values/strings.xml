@@ -7,9 +7,10 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="search_here">Search Here</string>
-    <string name="username_and_password_cannot_be_empty">Username and password cannot be empty</string>
-    <string name="error_unknown">Error unknown</string>
-    <string name="invalid_username_or_password">Invalid username and password</string>
+    <string name="username_cannot_be_empty">Username cannot be empty</string>
+    <string name="password_cannot_be_empty">Password cannot be empty</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="invalid_username_or_password">Invalid username or password</string>
     <string name="hide_password">Hide Password</string>
     <string name="show_password">Show Password</string>
     <string name="retype_password">Retype Password</string>

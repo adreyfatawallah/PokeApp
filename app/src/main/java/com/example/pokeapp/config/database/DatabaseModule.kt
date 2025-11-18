@@ -1,8 +1,8 @@
-package com.example.pokeapp.core.database
+package com.example.pokeapp.config.database
 
 import android.content.Context
 import androidx.room.Room
-import com.example.pokeapp.core.database.user.UserDao
+import com.example.pokeapp.config.database.user.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +25,7 @@ object DatabaseModule {
     }
 
     @Provides
+    @Singleton
     fun provideUserDao(database: AppDatabase): UserDao {
         return database.userDao()
     }

@@ -1,9 +1,9 @@
-package com.example.pokeapp.core.database
+package com.example.pokeapp.config.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.pokeapp.core.database.user.UserDao
-import com.example.pokeapp.core.database.user.UserEntity
+import com.example.pokeapp.config.database.user.UserDao
+import com.example.pokeapp.config.database.user.UserEntity
 
 @Database(entities = [UserEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {

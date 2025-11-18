@@ -1,4 +1,4 @@
-package com.example.pokeapp.core.database.user
+package com.example.pokeapp.config.database.user
 
 import androidx.room.Dao
 import androidx.room.Insert

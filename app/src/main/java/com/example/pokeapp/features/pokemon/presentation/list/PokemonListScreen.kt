@@ -3,7 +3,9 @@ package com.example.pokeapp.features.pokemon.presentation.list
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,10 +21,10 @@ fun PokemonListScreen(
     viewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val key = viewModel.key
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .padding(16.dp)
     ) {
         when (val currentState = uiState.value) {
@@ -30,12 +32,22 @@ fun PokemonListScreen(
                 ProgressIndicator()
             }
             is PokemonListState.Success -> {
+                val listState = rememberLazyListState()
+
+                val key = viewModel.key
+                val list = currentState.list
+
+                LaunchedEffect(listState) {
+                    viewModel.checkScrollPosition(listState)
+                }
+
                 PokemonList(
                     key = key,
                     onKeyChanged = {
                         viewModel.onKeyChanged(it)
                     },
-                    list = currentState.list.pokemon
+                    list = list,
+                    listState = listState
                 )
             }
             is PokemonListState.Error -> {

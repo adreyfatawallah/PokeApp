@@ -1,10 +1,5 @@
 package com.example.pokeapp.base.api
 
-//sealed interface Response<out S, out F> {
-//    data class Success<out S>(val data: S) : Response<S, Nothing>
-//    data class Failure<out F>(val error: F) : Response<Nothing, F>
-//}
-
 sealed interface Response<out D, out E: ApiError> {
     data class Success<out D>(val data: D) : Response<D, Nothing>
     data class Failure<out E: ApiError>(val error: E) : Response<Nothing, E>

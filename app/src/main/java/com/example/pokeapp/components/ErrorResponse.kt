@@ -32,7 +32,7 @@ fun ErrorResponse(
     }
 
     Text(
-        text = message ?: stringResource(R.string.error_unknown),
+        text = message ?: stringResource(R.string.unknown_error),
         textAlign = TextAlign.Center,
         modifier = modifier
     )
